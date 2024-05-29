@@ -6,7 +6,7 @@
         "https://github.com/pamblam/mysql-import#readme"
     ],
     "dependencies": {
-        "mysql2": "^2.3.3"
+        "mysql2": "^3.9.8"
     },
     "devDependencies": {
         "@types/mysql-import": "workspace:."
