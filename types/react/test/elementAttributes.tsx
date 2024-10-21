@@ -15,6 +15,7 @@ const testCases = [
     <span contextMenu="menuId" />,
     <span dir="rtl" />,
     <span draggable />,
+    <span enterKeyHint="done" />,
     <span hidden />,
     <span id="s" />,
     <span lang="art-x-tokipona" />,
@@ -29,6 +30,7 @@ const testCases = [
     <span autoCapitalize="on" />,
     <span autoCapitalize="words" />,
     <span autoCapitalize="sentences" />,
+    <span autoCapitalize="characters" />,
     <span autoCorrect="off" />,
     <span autoCorrect="on" />,
     <span translate="no" />,
@@ -64,6 +66,18 @@ const testCases = [
     <picture>
         <source media="test" srcSet="test" width={50} height={50} />
         <img src="test" width={100} height={100} />
+    </picture>,
+    <picture>
+        <source media="test" srcSet="test" width={50} height={50} />
+        <img alt="test" src="test" width={100} height={100} fetchPriority="high" />
+    </picture>,
+    <picture>
+        <source media="test" srcSet="test" width={50} height={50} />
+        <img alt="test" src="test" width={100} height={100} fetchPriority="low" />
+    </picture>,
+    <picture>
+        <source media="test" srcSet="test" width={50} height={50} />
+        <img alt="test" src="test" width={100} height={100} fetchPriority="auto" />
     </picture>,
     <dialog
         onCancel={event => {
