@@ -61,8 +61,22 @@ const docker11 = new Docker({
     },
 });
 
+const docker12 = new Docker({
+    sshOptions: {
+        host: "192.168.1.10",
+        port: 3000,
+        forceIPv4: true,
+        forceIPv6: true,
+    },
+});
+
 async function foo() {
-    const containers = await docker7.listContainers();
+    const containers = await docker7.listContainers({
+        all: false,
+        limit: 5,
+        size: true,
+        filters: undefined,
+    });
     for (const container of containers) {
         const foo = await docker7.getContainer(container.Id);
         const inspect = await foo.inspect();
@@ -76,6 +90,17 @@ async function foo() {
         const inspect = await foo.inspect();
         await foo.remove();
     }
+
+    const volumes = await docker8.listVolumes({
+        abortSignal: new AbortController().signal,
+        digests: false,
+        filters: undefined,
+    });
+
+    const nodes = await docker9.listNodes({
+        abortSignal: undefined,
+        filters: undefined,
+    });
 }
 
 docker.getEvents(
@@ -107,6 +132,9 @@ docker.getEvents().then(stream => {
 });
 
 const container = docker.getContainer("container-id");
+
+container.inspect({ abortSignal: new AbortController().signal });
+
 container.inspect((err, data) => {
     // NOOP
 });
@@ -128,12 +156,12 @@ container.remove({ v: true, force: false, link: true }, (err, data) => {
 });
 
 container.logs((err, logs) => {
-    // $ExpectType Buffer
+    // $ExpectType Buffer || Buffer<ArrayBufferLike>
     logs;
 });
 
 container.logs({}, (err, logs) => {
-    // $ExpectType Buffer
+    // $ExpectType Buffer || Buffer<ArrayBufferLike>
     logs;
 });
 
@@ -143,20 +171,20 @@ container.logs({ follow: true }, (err, logs) => {
 });
 
 container.logs({ follow: false }, (err, logs) => {
-    // $ExpectType Buffer
+    // $ExpectType Buffer || Buffer<ArrayBufferLike>
     logs;
 });
 
-// $ExpectType Promise<Buffer>
+// $ExpectType Promise<Buffer> || Promise<Buffer<ArrayBufferLike>>
 container.logs({ since: 0, until: 10, stdout: true, stderr: true });
 
-// $ExpectType Promise<Buffer>
+// $ExpectType Promise<Buffer> || Promise<Buffer<ArrayBufferLike>>
 container.logs({ since: "12345.987654321", until: "54321.123456789", stdout: true, stderr: true });
 
 // $ExpectType Promise<ReadableStream>
 container.logs({ follow: true });
 
-// $ExpectType Promise<Buffer>
+// $ExpectType Promise<Buffer> || Promise<Buffer<ArrayBufferLike>>
 container.logs({ follow: false });
 
 container.stats((err, logs) => {
@@ -238,11 +266,29 @@ docker.listContainers((err, containers) => {
     });
 });
 
-docker.listContainers().then(containers => {
+docker.listNetworks({ abortSignal: new AbortController().signal }, (err, response) => {
+    // NOOP
+});
+
+docker.listContainers({ abortSignal: new AbortController().signal }).then(containers => {
     return containers.map(container => docker.getContainer(container.Id));
 });
 
-docker.listImages({ all: true, filters: "{\"dangling\":[\"true\"]}", digests: true }).then(images => {
+docker.listImages({
+    all: true,
+    filters: "{\"dangling\":[\"true\"]}",
+    digests: true,
+    abortSignal: new AbortController().signal,
+}).then(images => {
+    return images.map(image => docker.getImage(image.Id));
+});
+
+docker.listImages({
+    all: true,
+    filters: { "dangling": ["true"] },
+    digests: true,
+    abortSignal: new AbortController().signal,
+}).then(images => {
     return images.map(image => docker.getImage(image.Id));
 });
 
@@ -269,7 +315,7 @@ docker.buildImage(
     },
 );
 
-docker.buildImage(".", { nocache: true }, (err, response) => {
+docker.buildImage(".", { nocache: true, version: "2" }, (err, response) => {
     // NOOP
 });
 
@@ -319,7 +365,7 @@ docker.createNetwork({ Name: "networkName" }, (err, network) => {
 
 docker.createVolume();
 
-docker.createVolume({ Name: "volumeName" });
+docker.createVolume({ Name: "volumeName", abortSignal: new AbortController().signal });
 
 docker.createVolume({
     Name: "volumeName",
@@ -330,6 +376,10 @@ docker.createVolume({
 
 docker.createVolume({ Name: "volumeName" }, (err, volume) => {
     volume.remove((err, data) => {
+        // NOOP
+    });
+
+    volume.remove({ abortSignal: new AbortController().signal }, (err, data) => {
         // NOOP
     });
 });
@@ -355,6 +405,14 @@ docker.pruneNetworks((err, response) => {
 docker.pruneVolumes((err, response) => {
     // NOOP
 });
+
+docker.pruneVolumes({
+    abortSignal: new AbortController().signal,
+}, (err, response) => {
+    // NOOP
+});
+
+docker.listVolumes({});
 
 docker.createService(
     {
@@ -398,14 +456,27 @@ docker.listServices({ filters: { name: ["network-name"] } }).then(services => {
     return services.map(service => docker.getService(service.ID));
 });
 
+(async () => {
+    // $ExpectType ReadableStream
+    const pullStream = await docker.pull("hello-world", { authconfig: { username: "username", password: "password" } });
+
+    // $ExpectType Image
+    const pushImage = docker.getImage("hello-world");
+
+    // $ExpectType ReadableStream
+    const pushStream = await pushImage.push({ authconfig: { username: "username", password: "password" } });
+});
+
 const image = docker.getImage("imageName");
-image.remove({ force: true, noprune: false }, (err, response) => {
+image.remove({ force: true, noprune: false, abortSignal: new AbortController().signal }, (err, response) => {
     // NOOP;
 });
 
 image.distribution({}, (err, response) => {
     // NOOP;
 });
+
+image.tag({ abortSignal: new AbortController().signal, repo: "hello/world", tag: "latest" });
 
 image.distribution((err, response) => {
     // NOOP;
