@@ -8,7 +8,7 @@
     "dependencies": {
         "@types/node": "*",
         "@types/web-push": "*",
-        "firebase-admin": "^11.5.0"
+        "firebase-admin": "^12.0.0"
     },
     "devDependencies": {
         "@types/node-pushnotifications": "workspace:."
