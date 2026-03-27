@@ -8,7 +8,7 @@
     "dependencies": {
         "@types/node": "*",
         "broccoli-node-api": "^1.7.0",
-        "broccoli-plugin": "^4.0.7"
+        "broccoli-plugin": "^5.0.0"
     },
     "devDependencies": {
         "@types/broccoli-funnel": "workspace:."
