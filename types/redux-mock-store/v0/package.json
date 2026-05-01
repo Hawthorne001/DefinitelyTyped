@@ -6,7 +6,7 @@
         "https://github.com/arnaudbenard/redux-mock-store"
     ],
     "dependencies": {
-        "redux": "^3.6.0"
+        "redux": "^4.0.0"
     },
     "devDependencies": {
         "@types/redux-mock-store": "workspace:."
