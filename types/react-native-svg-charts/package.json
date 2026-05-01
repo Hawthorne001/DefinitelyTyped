@@ -10,7 +10,7 @@
         "@types/d3-shape": "^1",
         "@types/react": "*",
         "react-native": "*",
-        "react-native-svg": "^6.2.1"
+        "react-native-svg": "^9.0.0"
     },
     "devDependencies": {
         "@types/react-native-svg-charts": "workspace:."
