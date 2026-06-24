@@ -7,7 +7,7 @@
     ],
     "dependencies": {
         "@types/svgo": "2",
-        "rollup": "^2",
+        "rollup": "^3.29.5",
         "svelte": "^3"
     },
     "devDependencies": {
