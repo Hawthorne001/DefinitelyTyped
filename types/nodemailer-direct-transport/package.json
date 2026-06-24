@@ -6,7 +6,7 @@
         "https://github.com/andris9/nodemailer-direct-transport"
     ],
     "dependencies": {
-        "@types/nodemailer": "^3"
+        "@types/nodemailer": "^4.1.0"
     },
     "devDependencies": {
         "@types/nodemailer-direct-transport": "workspace:."
